@@ -30,7 +30,6 @@ class DriveDelegate extends WatchUi.BehaviorDelegate {
 
     function onNextMode() as Boolean {
         controller.startStop();
-        System.println("eeeeee");
         return true;
     }
 }

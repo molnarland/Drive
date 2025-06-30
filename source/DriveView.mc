@@ -3,17 +3,17 @@ import Toybox.WatchUi;
 
 class DriveView extends WatchUi.View {
 
-    private var controller as DriveController;
+    private var _controller as DriveController;
 
     function initialize() {
         View.initialize();
 
-        controller = Application.getApp().controller;
+        _controller = Application.getApp().controller;
     }
 
     // Load your resources here
     function onLayout(dc as Dc) as Void {
-        setLayout(Rez.Layouts.MainLayout(dc));
+        setLayout(Rez.Layouts.DriveLayout(dc));
     }
 
     // Called when this View is brought to the foreground. Restore
@@ -24,14 +24,8 @@ class DriveView extends WatchUi.View {
 
     // Update the view
     function onUpdate(dc as Dc) as Void {
-        if (controller.getIsRunning()) {
-            (findDrawableById("MainLabel") as Text).setText("running");
-        }
-        else {
-            (findDrawableById("MainLabel") as Text).setText("not running");
-        }
+        (findDrawableById("DriveTime") as Text).setText(_controller.getElapsedTime());
 
-        // Call the parent onUpdate function to redraw the layout
         View.onUpdate(dc);
     }
 
