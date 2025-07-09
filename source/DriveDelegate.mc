@@ -19,17 +19,20 @@ class DriveDelegate extends WatchUi.BehaviorDelegate {
     }
 
     public function onKey(e) as Boolean {
-        if (e.getKey() == WatchUi.KEY_ENTER) {
-            controller.startStop();
-            WatchUi.requestUpdate();
-            return true;
+        switch (e.getKey()) {
+            case WatchUi.KEY_ENTER:
+                var isRun = controller.startStop();
+                if (!isRun) {
+                    onMenu();
+                }
+                //WatchUi.requestUpdate();
+                return true;
+            case WatchUi.KEY_ESC:
+                controller.lap();
+                WatchUi.requestUpdate();
+                return true;
+            default:
+                return false;
         }
-
-        return false;
-    }
-
-    function onNextMode() as Boolean {
-        controller.startStop();
-        return true;
-    }
+    } 
 }

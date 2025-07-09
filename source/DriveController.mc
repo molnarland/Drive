@@ -1,51 +1,123 @@
 using Toybox.ActivityRecording;
+using Toybox.ActivityMonitor;
 using Toybox.Timer;
 using Toybox.WatchUi;
 using Toybox.Time;
 using Toybox.Lang;
+using Toybox.System;
 import Toybox.Activity;
 import Toybox.Lang;
-
-const MAX_DRIVE_TIME = 3 * 60 * 60;
+import Toybox.Sensor;
 
 class DriveController {
-    private var _session as ActivityRecording.Session;
+    private var _session as ActivityRecording.Session?;
     private var _position as DrivePosition;
     private var _isRunning as Boolean;
     private var _timer as DriveTimer; 
+    private var _clockTime as System.ClockTime;
+
+    private var _hr as Number;
+    private var _speed as Float;
+
+    private var _isRest as Boolean;
 
     public function initialize() {
-        _session = ActivityRecording.createSession({  // set up recording session
-            :name=>"Drive",                               // set session name
-            :sport=>Activity.SPORT_DRIVING,              // set sport type
-            :subSport=>Activity.SUB_SPORT_MULTI_GAS_DIVING,       // set sub sport type
-        });
+        _session = null;
         _position = new DrivePosition();
         _isRunning = false;
         _timer = new DriveTimer();
+        _clockTime = System.getClockTime();
+        _hr = 0;
+        _speed = 0.0;
+        _isRest = false;
+        enableSensors();
     }
 
-    public function startStop() as Void {
-        System.println(_session.isRecording());
-        if (_session.isRecording()) {
+    private function enableSensors() as Void {
+        Sensor.setEnabledSensors([Sensor.SENSOR_HEARTRATE]);
+        Sensor.enableSensorEvents(method(:onSensor));
+    }
+
+    private function createSession() as Void {
+        _session = ActivityRecording.createSession({
+            :name=>"Drive",
+            :sport=>Activity.SPORT_DRIVING,
+            :subSport=>Activity.SUB_SPORT_MULTI_GAS_DIVING,
+        });
+    }
+
+    public function startStop() as Boolean {
+        if (_session instanceof ActivityRecording.Session && _session.isRecording()) {
             stop();
+            return false;
         } else {
             start();
+            return true;
         }
     }
 
     public function start() as Void {
-        _session.start();
+        createSession();
+        if (_session instanceof ActivityRecording.Session) {
+            _session.start();
+        }
         _position.start();
         _timer.start();
         _isRunning = true;
     }
 
     public function stop() as Void {
-        _session.stop();
-        _session.save();
-        _timer.stop();
+        _position.stop();
+        _timer.pause();
         _isRunning = false;
+    }
+
+    public function lap() as Void {
+        if (_session instanceof ActivityRecording.Session && _session.isRecording()) {
+            _session.addLap();
+            _isRest = !_isRest;
+            _timer.stop();
+            _timer.start();
+            _timer.setRest(_isRest);
+        } else {
+            System.println("No active session to lap.");
+        }
+    }
+
+    public function resume() as Void {
+        if (_session instanceof ActivityRecording.Session && !_session.isRecording()) {
+            _session.start();
+
+        } 
+        _position.start();
+        _timer.resume();
+        _isRunning = true;
+    }
+
+    public function save() as Void {
+        if (_session instanceof ActivityRecording.Session) {
+            _session.stop();
+        }
+
+        if (_session instanceof ActivityRecording.Session) {
+            _session.save();
+        }
+
+        _session = null;
+        System.exit();
+    }
+
+    public function discard() as Void {
+        if (_session instanceof ActivityRecording.Session) {
+            _session.stop();
+        }
+
+        if (_session instanceof ActivityRecording.Session) {
+            _session.discard();
+        }
+
+        _session = null;
+        System.exit();
     }
 
     public function onExit() as Void {
@@ -58,5 +130,30 @@ class DriveController {
 
     public function getElapsedTime() as String {
         return _timer.getElapsedTime();
+    }
+
+    public function getHR() as Number {
+        return _hr;
+    }
+
+    public function getSpeed() as Number {
+        if (_speed == null) {
+            return 0;
+        }
+
+        return (_speed * 3.6).toNumber(); // Convert m/s to km/h
+    }
+
+    public function getClockTime() as String {
+        return _clockTime.hour.format("%02d")  + ":" + _clockTime.min.format("%02d");
+    }
+
+    public function getRestStatus() as String {
+        return _isRest ? "Resting" : "Driving";
+    }
+
+    public function onSensor(sensorInfo as Sensor.Info) as Void {
+        _hr = sensorInfo.heartRate instanceof Number ? sensorInfo.heartRate as Number : 0 ;
+        _speed = sensorInfo.speed instanceof Float ? sensorInfo.speed as Float : 0.0 ;
     }
 }

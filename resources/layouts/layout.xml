@@ -1,4 +1,8 @@
 <layout id="DriveLayout" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
+    <label id="DriveStatus" x="35" y="20" color="Graphics.COLOR_WHITE" font="Graphics.FONT_XTINY" />
     <label id="DriveTime" x="122" y="16" color="Graphics.COLOR_WHITE" font="Graphics.FONT_GLANCE_NUMBER" />
+    <label id="DriveHR" x="20" y="80" color="Graphics.COLOR_WHITE" font="Graphics.FONT_MEDIUM" />
+    <label id="DriveClockTime" x="110" y="80" color="Graphics.COLOR_WHITE" font="Graphics.FONT_MEDIUM" />
+    <label id="DriveSpeed" x="65" y="140" color="Graphics.COLOR_WHITE" font="Graphics.FONT_XTINY" />
     <!-- <bitmap id="id_monkey" x="center" y="30" filename="../drawables/monkey.png" /> -->
 </layout>
