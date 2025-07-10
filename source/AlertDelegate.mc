@@ -1,9 +1,7 @@
-import Toybox.Lang;
 import Toybox.WatchUi;
-import Toybox.System;
-using Toybox.Application;
+import Toybox.Lang;
 
-class DriveDelegate extends WatchUi.BehaviorDelegate {
+class AlertDelegate extends WatchUi.BehaviorDelegate {
 
     private var _controller as DriveController;
 
@@ -15,29 +13,16 @@ class DriveDelegate extends WatchUi.BehaviorDelegate {
 
     public function onKey(e) as Boolean {
         switch (e.getKey()) {
-            case WatchUi.KEY_ENTER:
-                return onEnter();
             case WatchUi.KEY_ESC:
                 return onEsc();
             default:
                 return false;
         }
-    } 
-
-
-    private function onEnter() as Boolean {
-        var isRun = _controller.startStop();
-        if (!isRun) {
-            onMenu();
-            WatchUi.pushView(new Rez.Menus.MainMenu(), new DriveMenuDelegate(), WatchUi.SLIDE_UP);
-        }
-
-        return true;
     }
 
     private function onEsc() as Boolean {
         _controller.lap();
-        WatchUi.requestUpdate();
+        WatchUi.popView(WatchUi.SLIDE_DOWN);
         return true;
     }
 }

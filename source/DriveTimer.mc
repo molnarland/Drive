@@ -1,38 +1,23 @@
 using Toybox.Timer;
 using Toybox.Attention;
+using Toybox.WatchUi;
+import Toybox.System;
+import Toybox.Graphics;
 import Toybox.Lang;
 
-const MAX_DRIVE_TIME = 30 * 60;
-const MAX_REST_TIME = 10;
+const MAX_DRIVE_TIME = 1;
+const MAX_REST_TIME = 1;
 
-class DriveTimer {
-    private var _timer as Timer.Timer;
-    private var _startTime as Number?;
+class DriveTimer extends BaseTimer {
     private var _isRest as Boolean;
+    private var _alertTimer as AlertTimer;
 
     public function initialize() {
-        _timer = new Timer.Timer();
-        _startTime = null;
+        BaseTimer.initialize();
+
         _isRest = false;
-    }
-
-    public function start() as Void {
-        _timer.start(method(:requestUpdate), 1000, true);
-        _startTime = Time.now().value() /*- 59 * 60*/;   
-    }
-
-    public function resume() as Void {
-        _timer.start(method(:requestUpdate), 1000, true);
-    }
-
-    public function pause() as Void {
-        _timer.stop();
-    }
-
-    public function stop() as Void {
-        _timer.stop();
-        _startTime = null;
-    }
+        _alertTimer = new AlertTimer(method(:stopAlert));
+    } 
 
     public function getElapsedTime() as String {
         if (_startTime == null) {
@@ -54,39 +39,34 @@ class DriveTimer {
     }
 
     public function requestUpdate() as Void {
-        var minutes = getMinutes(null);
-        if (_isRest) {
-            if (minutes >= MAX_REST_TIME) {
-                doVibrate();
-            }
-        } else {
-            if (minutes >= MAX_DRIVE_TIME) {
-                doVibrate();
-            }
+        var duration = getDuration();
+        var limit = _isRest ? MAX_REST_TIME : MAX_DRIVE_TIME;
+
+        System.println(duration + " minutes elapsed, limit is " + limit);
+
+        if (duration == limit * 60) {
+            doVibrate();
+            startAlert();
         }
 
         WatchUi.requestUpdate();
     }
 
+    public function startAlert() as Void {
+        System.println("Starting alert");
+        var alertView = _isRest ? new RestAlertView() : new DriveAlertView();
+        WatchUi.pushView(alertView, new AlertDelegate(), WatchUi.SLIDE_UP);
+        _alertTimer.start();
+    }
+
+    public function stopAlert() as Void {
+        System.println("Stopping alert");
+        WatchUi.popView(WatchUi.SLIDE_DOWN);
+    }
+
     public function setRest(isRest as Boolean) as Void {
         _isRest = isRest;
-    }
-
-    private function getDuration() as Number {
-        if (_startTime == null) {
-            return 0;
-        }
-        
-        return Time.now().value() - (_startTime as Number);
-    }
-
-    private function getMinutes(duration as Number?) as Number {
-        if (duration == null) {
-            duration = getDuration();
-        }
-
-        return duration / 60;
-    }
+    } 
 
     private function doVibrate() as Void {
         if (Attention has :vibrate) {
