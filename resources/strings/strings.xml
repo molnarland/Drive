@@ -5,6 +5,9 @@
     <string id="menu_label_save">Save</string>
     <string id="menu_label_discard">Discard</string>
 
-    <string id="driveAlert">Take a rest</string>
-    <string id="restAlert">Can drive now</string>
+    <string id="alert_drive">Take a rest</string>
+    <string id="alert_rest">Can drive now</string>
+
+    <string id="progress_saving">Saving...</string>"
+    <string id="progress_discarding">Discarding...</string>
 </strings>

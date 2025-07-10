@@ -9,10 +9,11 @@ import Toybox.Activity;
 import Toybox.Lang;
 import Toybox.Sensor;
 
+
 class DriveController {
     private var _session as ActivityRecording.Session?;
     private var _position as DrivePosition;
-    private var _isRunning as Boolean;
+    private var _status as Number;
     private var _timer as DriveTimer; 
     private var _clockTime as System.ClockTime;
 
@@ -24,7 +25,7 @@ class DriveController {
     public function initialize() {
         _session = null;
         _position = new DrivePosition();
-        _isRunning = false;
+        _status = DriveStatus.STOPPED;
         _timer = new DriveTimer();
         _clockTime = System.getClockTime();
         _hr = 0;
@@ -63,13 +64,13 @@ class DriveController {
         }
         _position.start();
         _timer.start();
-        _isRunning = true;
+        _status = DriveStatus.RUNNING;
     }
 
     public function stop() as Void {
         _position.stop();
         _timer.pause();
-        _isRunning = false;
+        _status = DriveStatus.STOPPED;
     }
 
     public function lap() as Void {
@@ -91,7 +92,7 @@ class DriveController {
         } 
         _position.start();
         _timer.resume();
-        _isRunning = true;
+        _status = DriveStatus.RUNNING;
     }
 
     public function save() as Void {
@@ -103,8 +104,8 @@ class DriveController {
             _session.save();
         }
 
-        _session = null;
-        System.exit();
+        WatchUi.switchToView(new DriveSaveProgress(), new DriveProgressDelegate(), WatchUi.SLIDE_UP);
+        (new Timer.Timer()).start(method(:onExit), 3000, false);
     }
 
     public function discard() as Void {
@@ -116,16 +117,17 @@ class DriveController {
             _session.discard();
         }
 
+        WatchUi.switchToView(new DriveDiscardProgress(), new DriveProgressDelegate(), WatchUi.SLIDE_UP);
+        (new Timer.Timer()).start(method(:onExit), 3000, false);
+    }
+
+    public function onExit() as Void {
         _session = null;
         System.exit();
     }
 
-    public function onExit() as Void {
-        System.exit();
-    }
-
     public function getIsRunning() as Boolean {
-        return _isRunning;
+        return _status == DriveStatus.RUNNING;
     }
 
     public function getElapsedTime() as String {

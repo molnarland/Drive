@@ -1,5 +1,5 @@
 <layout id="RestAlert" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
-    <text-area id="mainLabel" text="@Strings.restAlert" personality="
+    <text-area id="mainLabel" text="@Strings.alert_rest" personality="
         prompt_color_dark__body
         prompt_size__body_no_title
         prompt_loc__body_no_title

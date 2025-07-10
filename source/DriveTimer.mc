@@ -42,8 +42,6 @@ class DriveTimer extends BaseTimer {
         var duration = getDuration();
         var limit = _isRest ? MAX_REST_TIME : MAX_DRIVE_TIME;
 
-        System.println(duration + " minutes elapsed, limit is " + limit);
-
         if (duration == limit * 60) {
             doVibrate();
             startAlert();
@@ -53,14 +51,12 @@ class DriveTimer extends BaseTimer {
     }
 
     public function startAlert() as Void {
-        System.println("Starting alert");
         var alertView = _isRest ? new RestAlertView() : new DriveAlertView();
         WatchUi.pushView(alertView, new AlertDelegate(), WatchUi.SLIDE_UP);
         _alertTimer.start();
     }
 
     public function stopAlert() as Void {
-        System.println("Stopping alert");
         WatchUi.popView(WatchUi.SLIDE_DOWN);
     }
 
