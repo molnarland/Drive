@@ -167,14 +167,6 @@ class DriveController {
         return _clockTime.hour.format("%02d")  + ":" + _clockTime.min.format("%02d");
     }
 
-    public function getIsRest() as Boolean {
-        return _isRest;
-    }
-
-    public function getRestStatus() as String {
-        return _isRest ? "Resting" : "Driving";
-    }
-
     public function onSensor(sensorInfo as Sensor.Info) as Void {
         _hr = sensorInfo.heartRate instanceof Number ? sensorInfo.heartRate as Number : 0 ;
         _speed = sensorInfo.speed instanceof Float ? sensorInfo.speed as Float : 0.0 ;

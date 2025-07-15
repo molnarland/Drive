@@ -1,0 +1,22 @@
+    <resources>
+        <layout 
+            id="RestLayout" 
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+            xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd"
+            
+        >
+            <drawable id="background" /> 
+
+            <label id="DriveStatus" x="35" y="20" color="Graphics.COLOR_BLACK" font="Graphics.FONT_XTINY" text="@Strings.status_rest" />
+            <label id="DriveTime" x="122" y="16" color="Graphics.COLOR_BLACK" font="Graphics.FONT_GLANCE_NUMBER" />
+            <label id="DriveHR" x="20" y="80" color="Graphics.COLOR_BLACK" font="Graphics.FONT_MEDIUM" />
+            <label id="DriveClockTime" x="110" y="80" color="Graphics.COLOR_BLACK" font="Graphics.FONT_MEDIUM" />
+            <label id="DriveSpeed" x="65" y="140" color="Graphics.COLOR_BLACK" font="Graphics.FONT_XTINY" /> 
+        </layout>
+
+        <drawables>
+            <drawable-list id="background">
+                <shape type="rectangle" x="0" y="0" width="fill" height="fill" color="Graphics.COLOR_WHITE" />
+            </drawable-list> 
+        </drawables>
+    </resources>
