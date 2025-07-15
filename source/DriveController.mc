@@ -5,6 +5,7 @@ using Toybox.WatchUi;
 using Toybox.Time;
 using Toybox.Lang;
 using Toybox.System;
+import Toybox.FitContributor;
 import Toybox.Activity;
 import Toybox.Lang;
 import Toybox.Sensor;
@@ -12,6 +13,8 @@ import Toybox.Sensor;
 
 class DriveController {
     private var _session as ActivityRecording.Session?;
+    private var _dataField as FitContributor.Field?;
+
     private var _position as DrivePosition;
     private var _status as Number;
     private var _timer as DriveTimer; 
@@ -24,6 +27,7 @@ class DriveController {
 
     public function initialize() {
         _session = null;
+        _dataField = null;
         _position = new DrivePosition();
         _status = DriveStatus.STOPPED;
         _timer = new DriveTimer();
@@ -45,6 +49,12 @@ class DriveController {
             :sport=>Activity.SPORT_DRIVING,
             :subSport=>Activity.SUB_SPORT_MULTI_GAS_DIVING,
         });
+        _dataField = _session.createField(
+            "Lap Type", 
+            1, 
+            FitContributor.DATA_TYPE_STRING, 
+            { :mesgType=>FitContributor.MESG_TYPE_LAP, :count=>6 }
+        );
     }
 
     public function startStop() as Boolean {
@@ -80,6 +90,9 @@ class DriveController {
             _timer.stop();
             _timer.start();
             _timer.setRest(_isRest);
+            if (_dataField != null) {
+                _dataField.setData(_isRest ? "Rest" : "Drive");
+                }
         } else {
             System.println("No active session to lap.");
         }
@@ -135,6 +148,10 @@ class DriveController {
     }
 
     public function getHR() as Number {
+        if (_hr >= 100) {
+            WatchUi.pushView(new HighHRAlertView(), new AlertDelegate(), WatchUi.SLIDE_LEFT);
+        }
+
         return _hr;
     }
 
@@ -148,6 +165,10 @@ class DriveController {
 
     public function getClockTime() as String {
         return _clockTime.hour.format("%02d")  + ":" + _clockTime.min.format("%02d");
+    }
+
+    public function getIsRest() as Boolean {
+        return _isRest;
     }
 
     public function getRestStatus() as String {

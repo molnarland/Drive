@@ -30,24 +30,36 @@ class DriveView extends WatchUi.View {
         var clockTimeDrawable = findDrawableById("DriveClockTime");
         var statusDrawable = findDrawableById("DriveStatus");
 
+        var foregroundColor = _controller.getIsRest() ? Graphics.COLOR_BLACK : Graphics.COLOR_WHITE;
+        var backgroundColor = _controller.getIsRest() ? Graphics.COLOR_WHITE : Graphics.COLOR_BLACK;
+
+        System.println(_controller.getIsRest() + " " + foregroundColor + " " + backgroundColor + " " + _controller.getRestStatus());
+
+        dc.setColor(foregroundColor, backgroundColor);
+
         if (timeDrawable instanceof Text) {
             timeDrawable.setText(_controller.getElapsedTime().toString());
+            // timeDrawable.setColor(foregroundColor);
         }
         
         if (hrDrawable instanceof Text) {
             hrDrawable.setText(_controller.getHR().toString() + "bpm");
+            //hrDrawable.setColor(foregroundColor);
         }
 
         if (speedDrawable instanceof Text) {
             speedDrawable.setText(_controller.getSpeed().toString() + "km/h");
+            // speedDrawable.setColor(foregroundColor);
         }
 
         if (clockTimeDrawable instanceof Text) {
             clockTimeDrawable.setText(_controller.getClockTime());
+            // clockTimeDrawable.setColor(foregroundColor);
         }
 
         if (statusDrawable instanceof Text) {
             statusDrawable.setText(_controller.getRestStatus());
+            // statusDrawable.setColor(foregroundColor);
             
         }
 
