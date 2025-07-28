@@ -5,8 +5,8 @@ import Toybox.System;
 import Toybox.Graphics;
 import Toybox.Lang;
 
-const MAX_DRIVE_TIME = 1;
-const MAX_REST_TIME = 1;
+const MAX_DRIVE_TIME = 10800; // 3 hours in seconds
+const MAX_REST_TIME = 900; // 15 minutes in seconds
 
 class DriveTimer extends BaseTimer {
     private var _isRest as Boolean;
@@ -42,7 +42,7 @@ class DriveTimer extends BaseTimer {
         var duration = getDuration();
         var limit = _isRest ? MAX_REST_TIME : MAX_DRIVE_TIME;
 
-        if (duration == limit * 60) {
+        if (duration == limit) {
             doVibrate();
             startAlert();
         }

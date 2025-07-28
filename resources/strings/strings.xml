@@ -9,8 +9,7 @@
     <string id="menu_label_discard">Discard</string>
 
     <string id="alert_drive">Take a rest</string>
-    <string id="alert_rest">Can drive now</string>
-    <string id="alert_high_hr">High heart rate!</string>
+    <string id="alert_rest">Can drive</string>
 
     <string id="progress_saving">Saving...</string>"
     <string id="progress_discarding">Discarding...</string>

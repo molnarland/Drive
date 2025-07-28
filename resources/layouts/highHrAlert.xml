@@ -1,8 +1,0 @@
-<layout id="HighHRAlert" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
-    <text-area id="mainLabel" text="@Strings.alert_high_hr" personality="
-        prompt_color_dark__body
-        prompt_size__body_no_title
-        prompt_loc__body_no_title
-        prompt_font__body_no_title
-    " />
-</layout>

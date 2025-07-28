@@ -49,12 +49,6 @@ class DriveController {
             :sport=>Activity.SPORT_DRIVING,
             :subSport=>Activity.SUB_SPORT_MULTI_GAS_DIVING,
         });
-        _dataField = _session.createField(
-            "Lap Type", 
-            1, 
-            FitContributor.DATA_TYPE_STRING, 
-            { :mesgType=>FitContributor.MESG_TYPE_LAP, :count=>6 }
-        );
     }
 
     public function startStop() as Boolean {
@@ -148,10 +142,6 @@ class DriveController {
     }
 
     public function getHR() as Number {
-        if (_hr >= 100) {
-            WatchUi.pushView(new HighHRAlertView(), new AlertDelegate(), WatchUi.SLIDE_LEFT);
-        }
-
         return _hr;
     }
 
